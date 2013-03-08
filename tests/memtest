@@ -1,0 +1,6 @@
+mkdir -p /tmp/hardware_test
+git clone git://github.com/gregs1104/stream-scaling.git /tmp/hardware_test/stream-scaling
+
+cd /tmp/hardware_test/stream-scaling
+./multi-stream-scaling 10 `hostname`
+./multi-averager `hostname` > stream_`hostname`.txt
