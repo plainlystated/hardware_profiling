@@ -46,12 +46,13 @@ __END__
         renderTo: 'container',
         type: 'line',
         marginRight: 130,
-        marginBottom: 25
+        marginBottom: 50
       },
       title: {
         text: 'RAM Speed Test',
         x: -20 //center
       },
+      xAxis: { title: { text: 'Threads (one per core)' } },
       yAxis: {
         title: {
         text: 'Triads MBps'
