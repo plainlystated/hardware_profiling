@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# encoding: utf-8
 
 require 'json'
 
@@ -8,20 +7,21 @@ raise "Usage: #{$0} <results_dir>" unless ARGV.size == 1
 results_dir = ARGV.first
 
 series = []
-box_lines = Dir[results_dir + "/stream_*.txt"].map do |file|
-  box_name = file.match(/stream_(.*).txt/)[1]
+box_lines = Dir[results_dir + "/*.zcav"].map do |file|
+  box_name = file.match(/\/(.*).zcav$/)
+
   box_data = []
   File.open(file) do |file|
     file.each do |line|
       next if line =~ /^#/
-      threads, avg, stddev = *(line.split(' '))
-      box_data << avg.to_f
+      offset, speed, time = *(line.split(' '))
+      box_data << [offset.to_f, speed.to_f]
     end
   end
-  series << {'name' => box_name, 'data' => box_data}
+  series << {'name' => box_name, 'data' => box_data} unless box_data == []
 end.compact
 
-File.open(File.dirname(__FILE__) + "/../memtest.html", "w") do |output|
+File.open(File.dirname(__FILE__) + "/../zcav.html", "w") do |output|
   DATA.each do |line|
     line_gsubbed = line.to_s.sub(/__SERIES__/, series.to_json)
     output.puts line_gsubbed
@@ -34,7 +34,7 @@ __END__
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>Memory Speed</title>
+    <title>ZCAV test</title>
     <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>
     <script type='text/javascript'>//<![CDATA[
 
@@ -46,27 +46,28 @@ __END__
         renderTo: 'container',
         type: 'line',
         marginRight: 130,
-        marginBottom: 25
+        marginBottom: 50
       },
       title: {
-        text: 'RAM Speed Test',
+        text: 'ZCAV',
         x: -20 //center
       },
+      xAxis: { title: { text: 'Offset' } },
       yAxis: {
         title: {
-        text: 'Triads MBps'
-      },
+          text: 'MB/s'
+        },
         plotLines: [{
-        value: 0,
-        width: 1,
-        color: '#808080'
-      }]
+          value: 0,
+          width: 1,
+          color: '#808080'
+        }]
       },
         tooltip: {
-        formatter: function() {
-        return '<b>'+ this.series.name +'</b><br/>'+
-        this.x +': '+ this.y;
-      }
+          formatter: function() {
+          return '<b>'+ this.series.name +'</b><br/>'+
+          this.x +': '+ this.y;
+        }
       },
         legend: {
         layout: 'vertical',
