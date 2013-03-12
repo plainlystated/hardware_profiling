@@ -7,8 +7,8 @@ raise "Usage: #{$0} <results_dir>" unless ARGV.size == 1
 results_dir = ARGV.first
 
 series = []
-box_lines = Dir[results_dir + "/*.zcav"].map do |file|
-  box_name = file.match(/\/(.*).zcav$/)
+Dir[results_dir + "/*.zcav"].map do |file|
+  box_name = file.match(/([^\/]+).zcav$/)[1].gsub(/_/, '/')
 
   box_data = []
   File.open(file) do |file|

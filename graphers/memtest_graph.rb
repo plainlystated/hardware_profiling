@@ -8,7 +8,7 @@ raise "Usage: #{$0} <results_dir>" unless ARGV.size == 1
 results_dir = ARGV.first
 
 series = []
-box_lines = Dir[results_dir + "/stream_*.txt"].map do |file|
+Dir[results_dir + "/stream_*.txt"].map do |file|
   box_name = file.match(/stream_(.*).txt/)[1]
   box_data = []
   File.open(file) do |file|
