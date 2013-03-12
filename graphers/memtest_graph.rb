@@ -21,11 +21,9 @@ Dir[results_dir + "/stream_*.txt"].map do |file|
   series << {'name' => box_name, 'data' => box_data}
 end.compact
 
-File.open(File.dirname(__FILE__) + "/../memtest.html", "w") do |output|
-  DATA.each do |line|
-    line_gsubbed = line.to_s.sub(/__SERIES__/, series.to_json)
-    output.puts line_gsubbed
-  end
+DATA.each do |line|
+  line_gsubbed = line.to_s.sub(/__SERIES__/, series.to_json)
+  puts line_gsubbed
 end
 
 
