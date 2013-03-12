@@ -3,9 +3,9 @@
 
 require 'json'
 
-raise "Usage: #{$0} <results_dir> <output_file>" unless ARGV.size == 2
+raise "Usage: #{$0} <results_dir>" unless ARGV.size == 1
 
-results_dir, output_file = *ARGV
+results_dir = ARGV.first
 
 series = []
 box_lines = Dir[results_dir + "/stream_*.txt"].map do |file|
